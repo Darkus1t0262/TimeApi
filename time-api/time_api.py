@@ -1,8 +1,9 @@
-# time_api.py
 from flask import Flask, jsonify
+from flask_cors import CORS
 import datetime
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all domains
 
 @app.route('/time', methods=['GET'])
 def get_time():
