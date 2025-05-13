@@ -1,0 +1,33 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch name if different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Build Docker image
+        run: |
+          docker build -t darkjus/your-railway-app:latest .
+
+      - name: Log in to Railway CLI
+        run: |
+          curl -sSL https://cli.railway.app/install.sh | sh
+          export PATH=$PATH:$HOME/.railway/bin
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy to Railway
+        run: |
+          railway up --service your-railway-service-name
