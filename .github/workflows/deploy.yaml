@@ -23,10 +23,14 @@ jobs:
 
       - name: Install Railway CLI
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y curl
           curl -sSL https://cli.railway.app/install.sh | bash
+          export PATH="$HOME/.railway/bin:$PATH"
           echo 'export PATH="$HOME/.railway/bin:$PATH"' >> $GITHUB_ENV
+
+      - name: Verify Railway CLI Installation
+        run: |
+          railway --version
+          railway status || echo "Railway CLI installed successfully"
 
       - name: Authenticate Railway CLI
         env:
