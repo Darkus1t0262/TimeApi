@@ -23,7 +23,9 @@ jobs:
 
       - name: Install Railway CLI
         run: |
-          curl -sSL https://cli.railway.app/install.sh | sh
+          sudo apt-get update -y
+          sudo apt-get install -y curl
+          curl -sSL https://cli.railway.app/install.sh | bash
           echo 'export PATH="$HOME/.railway/bin:$PATH"' >> $GITHUB_ENV
 
       - name: Authenticate Railway CLI
@@ -41,4 +43,5 @@ jobs:
 
       - name: PR Deployment Confirmation
         if: github.event_name == 'pull_request'
-        run: "echo 'Pull Request Triggered: No deployment will occur.'"
+        run: |
+          echo "Pull Request Triggered: No deployment will occur."
