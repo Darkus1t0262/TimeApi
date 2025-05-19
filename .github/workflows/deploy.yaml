@@ -38,5 +38,5 @@ jobs:
 
       - name: PR Deployment Confirmation
         if: github.event_name == 'pull_request'
-        run: echo "Pull Request Triggered: No deployment will occur."
+        run: "echo 'Pull Request Triggered: No deployment will occur.'"
  
