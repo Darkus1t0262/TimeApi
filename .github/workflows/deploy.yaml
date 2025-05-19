@@ -21,16 +21,15 @@ jobs:
         with:
           python-version: 3.12
 
-      - name: Install Railway CLI
+      - name: Install Railway CLI Manually
         run: |
-          curl -sSL https://cli.railway.app/install.sh | bash
-          export PATH="$HOME/.railway/bin:$PATH"
-          echo 'export PATH="$HOME/.railway/bin:$PATH"' >> $GITHUB_ENV
-
-      - name: Verify Railway CLI Installation
-        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget
+          wget -q https://cli.railway.app/railway-linux-amd64 -O /usr/local/bin/railway
+          sudo chmod +x /usr/local/bin/railway
+          echo 'export PATH="/usr/local/bin:$PATH"' >> $GITHUB_ENV
+          source $GITHUB_ENV
           railway --version
-          railway status || echo "Railway CLI installed successfully"
 
       - name: Authenticate Railway CLI
         env:
