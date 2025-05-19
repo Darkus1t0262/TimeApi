@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main  # Change this to your main branch name if different
+  pull_request:
+    branches:
+      - main  # Adjust this if your PRs are targeting a different branch
 
 jobs:
   deploy:
@@ -29,5 +32,11 @@ jobs:
           railway login --token ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy to Railway
+        if: github.event_name == 'push'
         run: |
           railway up --service your-railway-service-name
+
+      - name: PR Deployment Confirmation
+        if: github.event_name == 'pull_request'
+        run: echo "Pull Request Triggered: No deployment will occur."
+ 
