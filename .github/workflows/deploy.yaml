@@ -16,27 +16,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Set up Python (3.12)
         uses: actions/setup-python@v4
         with:
           python-version: 3.12
 
-      - name: Build Docker image
-        run: |
-          docker build -t darkjus/your-railway-app:latest .
-
-      - name: Log in to Railway CLI
+      - name: Install Railway CLI
         run: |
           curl -sSL https://cli.railway.app/install.sh | sh
-          export PATH=$PATH:$HOME/.railway/bin
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          echo 'export PATH="$HOME/.railway/bin:$PATH"' >> $GITHUB_ENV
 
-      - name: Deploy to Railway
-        if: github.event_name == 'push'
+      - name: Authenticate Railway CLI
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway up --service your-railway-service-name
+          railway login --token $RAILWAY_TOKEN
+
+      - name: Deploy to Railway (Production)
+        if: github.event_name == 'push'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up --yes
 
       - name: PR Deployment Confirmation
         if: github.event_name == 'pull_request'
-        run: "echo 'Pull Request Triggered: No deployment will occur.'"
- 
+        run: echo 'Pull Request Triggered: No deployment will occur.'
